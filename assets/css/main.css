@@ -1616,12 +1616,14 @@ button,
     background-size: cover;
     background-position: center;
     background-color: transparent;
-    width: 16em;
-    height: 16em;
-    line-height: 16em;
+    width: 14em;
+    height: 14em;
+    line-height: 14em;
     text-align: center;
     font-size: 1.25em;
     padding: 0; }
+  #header .button:hover {
+    background-image: url(../../images/start_button_hover.png); }
   #header hr {
     top: 1.5em;
     margin-bottom: 3em;
@@ -1752,12 +1754,12 @@ body.homepage.is-loading #header:after {
       border-right: solid 0.75em rgba(64, 64, 64, 0); }
 
 /* Banner */
-#banner {
+.banner {
   background: #fff;
   text-align: center;
   padding: 4.5em 0 4.5em 0;
   margin-bottom: 0; }
-  #banner header > p {
+  .banner header > p {
     margin-bottom: 0; }
 
 /* Content */
