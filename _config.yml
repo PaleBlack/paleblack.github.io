@@ -8,12 +8,16 @@
 # Site settings
 title: Pale Black
 email: pale_black@outlook.com
-description: > # Pale Black is a diversified Death Metal band from Switzerland
+description: >
+ Pale Black is a diversified Death Metal band from Switzerland
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://www.paleblack.ch" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown
+
+collections:
+ -  concerts
 
 sass:
   style: nested

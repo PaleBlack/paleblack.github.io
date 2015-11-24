@@ -1,22 +1,6 @@
-<!DOCTYPE HTML>
-<!--
-	Helios by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-<head>
-    <title>Pale Black</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!--[if lte IE 8]>
-    <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="css/main.css"/>
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="css/ie8.css"/><![endif]-->
-    <link rel="alternate" hreflang="en" href="index_en.html"/>
-</head>
-<body class="homepage">
+---
+layout: startpage
+---
 <div id="page-wrapper">
 
     <!-- Header -->
@@ -62,59 +46,18 @@
     <!-- Carousel -->
     <section id="concerts" class="carousel">
         <div class="reel">
-
+            {% assign concerts = site.concerts | sort: 'date' | reverse %}
+            {% for concert in concerts %}
             <article>
-                <a href="#" class="image featured"><img src="images/concerts/proben.jpg" alt=""/></a>
-
+                <a href="#" class="image featured"><img src="images/concerts/{{concert.image}}" alt="{{concert.title}}"/></a>
                 <div class="inner">
-                    <h3>Aktuell sind leider keine Konzerte geplant</h3>
+                    <h3>{{concert.title}}</h3>
 
-                    <p>Wir proben fleissig und warten auf die Einladung zu deinem Event. Kontaktiere uns einfach via
-                        <a href="mailto:pale_black@outlook.com">Email</a> oder <a
-                                href="https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a></p>
+                    <p>{% if concert.nodate %}{% else %}{{ concert.date | date: "%b %-d, %Y" }}{% endif %}</p>
+                    <p>{{concert.text}}</p>
                 </div>
             </article>
-
-
-            <article>
-                <a href="#" class="image"><img src="images/concerts/playground_2015.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Playground Lounge</h3>
-
-                    <p>30. April 2015</p>
-
-                    <p>Gemeinsam mit the Artifice</p>
-                </div>
-            </article>
-
-            <article>
-                <a href="#" class="image"><img src="images/concerts/shit_n_schein.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Shit & Schein</h3>
-
-                    <p>7. Februar 2015</p>
-
-                    <p>Newcomer Festival mit wildem Stilmix:</p>
-                </div>
-            </article>
-            <article>
-                <a href="#" class="image"><img src="images/concerts/hellvetia_days_2014.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Hellvetia Days</h3>
-                    <p>Schweizer Metal mit Profanity als Headliner.</p>
-                </div>
-            </article>
-            <article>
-                <a href="#" class="image"><img src="images/concerts/stage_dive_derby.png" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Stage Dive Derby</h3>
-                    <p></p>
-                </div>
-            </article>
+            {% endfor %}
         </div>
     </section>
 
@@ -313,17 +256,3 @@
     </div>
 
 </div>
-
-<!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.dropotron.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.onvisible.min.js"></script>
-<script src="assets/js/skel.min.js"></script>
-<script src="assets/js/util.js"></script>
-<!--[if lte IE 8]>
-<script src="assets/js/ie/respond.min.js"></script><![endif]-->
-<script src="assets/js/main.js"></script>
-
-</body>
-</html>
