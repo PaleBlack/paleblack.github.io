@@ -8,12 +8,7 @@
 {% include head.html %}
 
 <body class="homepage">
-{{ content
-| replace: '!MAIL-URL!', site.mail-url
-| replace: '!FACEBOOK-URL!', site.facebook-url
-| replace: '!SOUNDCLOUD-URL!', site.soundcloud-url
-| replace: '!GITHUB-URL!', site.github-url
-}}
+{{ content | replace: '!MAIL-URL!', site.mail-url | replace: '!FACEBOOK-URL!', site.facebook-url | replace: '!SOUNDCLOUD-URL!', site.soundcloud-url | replace: '!GITHUB-URL!', site.github-url }}
 {% include scripts.html %}
 </body>
 
