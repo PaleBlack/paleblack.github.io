@@ -1,22 +1,6 @@
-<!DOCTYPE HTML>
-<!--
-	Helios by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-<head>
-    <title>Pale Black</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!--[if lte IE 8]>
-    <script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="css/main.css"/>
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="css/ie8.css"/><![endif]-->
-    <link rel="alternate" hreflang="en" href="index_en.html"/>
-</head>
-<body class="homepage">
+---
+layout: startpage
+---
 <div id="page-wrapper">
 
     <!-- Header -->
@@ -62,59 +46,22 @@
     <!-- Carousel -->
     <section id="concerts" class="carousel">
         <div class="reel">
-
+            {% assign concerts = site.concerts | sort: 'date' | reverse %}
+            {% for concert in concerts %}
             <article>
-                <a href="#" class="image featured"><img src="images/concerts/proben.jpg" alt=""/></a>
-
+                <div class="image featured">
+                    {% if concert.link %}<a href="{{concert.link}}">{% endif %}
+                    <img src="images/concerts/{{concert.image}}" alt="{{concert.title}}"/>
+                    {% if concert.link %}</a>{% endif %}
+                </div>
                 <div class="inner">
-                    <h3>Aktuell sind leider keine Konzerte geplant</h3>
-
-                    <p>Wir proben fleissig und warten auf die Einladung zu deinem Event. Kontaktiere uns einfach via
-                        <a href="mailto:pale_black@outlook.com">Email</a> oder <a
-                                href="https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a></p>
+                    <h3>{% if concert.title-en %}{{concert.title-en}}{% else %}{{concert.title}}{% endif %}</h3>
+                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/english-date.html date=concert.date
+                        %}{% endif %}</p>
+                    <p>{% if concert.text-en %}{{concert.text-en}}{% else %}{{concert.text}}{% endif %}</p>
                 </div>
             </article>
-
-
-            <article>
-                <a href="#" class="image"><img src="images/concerts/playground_2015.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Playground Lounge</h3>
-
-                    <p>30. April 2015</p>
-
-                    <p>Gemeinsam mit the Artifice</p>
-                </div>
-            </article>
-
-            <article>
-                <a href="#" class="image"><img src="images/concerts/shit_n_schein.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Shit & Schein</h3>
-
-                    <p>7. Februar 2015</p>
-
-                    <p>Newcomer Festival mit wildem Stilmix:</p>
-                </div>
-            </article>
-            <article>
-                <a href="#" class="image"><img src="images/concerts/hellvetia_days_2014.jpg" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Hellvetia Days</h3>
-                    <p>Schweizer Metal mit Profanity als Headliner.</p>
-                </div>
-            </article>
-            <article>
-                <a href="#" class="image"><img src="images/concerts/stage_dive_derby.png" alt=""/></a>
-
-                <div class="inner">
-                    <h3>Stage Dive Derby</h3>
-                    <p></p>
-                </div>
-            </article>
+            {% endfor %}
         </div>
     </section>
 
@@ -145,11 +92,11 @@
                 teilt.
                 Die drei warfen das bestehende Material nochmals über Bord und komponierten neue Songs. Nachdem
                 sie eine erste Basis hatten machten sie sich auf die
-                Suche nach Sänger und Bassist. In dieser Zeit lernten sie viele spezielle Menschen kennen, leider aber
+                Suche nach Sänger und Bassist. In dieser Zeit lernten sie viele Musiker kennen, leider aber
                 bis im Winter 2013 nicht die passende Ergänzung.
                 Das alles sollte sich mit Miriam schlagartig ändern. Mit einer Solo Performance von Janis Joplin's
                 "Mercedes Benz" überzeugte Sie das Trio auf anhieb.
-                Innert kürze erlente Sie das grownlen und präsentierte mit Bruno auch noch den perfekten Bassisten.
+                Innert Kürze erlernte Sie das growlen und präsentierte mit Bruno auch noch den perfekten Bassisten.
                 Fleissig wurde im Emmental geprobt und etwa ein halbes Jahr später stand Pale Black das erste Mal auf
                 der Bühne.
                 Seit da wurden mit viel Freude weitere Konzerte gespielt und neue Songs geschrieben.
@@ -175,9 +122,7 @@
                     </header>
                     <p>
                         Die einzige Frau in der Band kann sich dank ihrer kräftigen Stimme gut gegen die vier Jungs
-                        durchsetzen.
-                        Dank ihrer offenen Art kennt sie bei jedem Gig innert fünf Minuten alle Mitglieder der
-                        restlichen Bands.
+                        durchsetzen. Wer ihr eine Freude machen will, erzählt ihr einen abstrakten Witz.
                     </p>
                 </article>
                 <article class="4u 12u(mobile) special">
@@ -281,19 +226,19 @@
                             <h3>Contact</h3>
                         </header>
                         <p>Wir freuen uns über euren Support auf <a
-                                href=https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a> und <a
-                                href="https://soundcloud.com/pale-black-712434955">Soundcloud</a>. Falls ihr uns für
+                                href="{{site.facebook-url}}">Facebook</a> und <a
+                                href="{{site.soundcloud-url}}">Soundcloud</a>. Falls ihr uns für
                             einen
-                            Aufritt buchen möchtet, meldet euch am besten via <a href="mailto:pale_black@outlook.com">Email</a>
-                            oder <a href="https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a>.</p>
+                            Aufritt buchen möchtet, meldet euch am Besten via <a href="{{site.mail-url}}">Email</a>
+                            oder <a href="{{site.facebook-url}}">Facebook</a>.</p>
                         <ul class="icons">
-                            <li><a href="mailto:pale_black@outlook.com" class="icon fa-envelope"><span class="label">Mail</span></a>
+                            <li><a href="{{site.mail-url}}" class="icon fa-envelope"><span class="label">Mail</span></a>
                             </li>
-                            <li><a href="https://www.facebook.com/pages/Pale-Black/878060698885724"
+                            <li><a href="{{site.facebook-url}}"
                                    class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-                            <li><a href="https://soundcloud.com/pale-black-712434955" class="icon fa-soundcloud"><span
+                            <li><a href="{{site.soundcloud-url}}" class="icon fa-soundcloud"><span
                                     class="label">Soundcloud</span></a></li>
-                            <li><a href="https://github.com/PaleBlack/paleblack.github.io" class="icon fa-github"><span
+                            <li><a href="{{site.github-url}}" class="icon fa-github"><span
                                     class="label">Github</span></a></li>
                         </ul>
                     </section>
@@ -313,17 +258,3 @@
     </div>
 
 </div>
-
-<!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.dropotron.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/jquery.onvisible.min.js"></script>
-<script src="assets/js/skel.min.js"></script>
-<script src="assets/js/util.js"></script>
-<!--[if lte IE 8]>
-<script src="assets/js/ie/respond.min.js"></script><![endif]-->
-<script src="assets/js/main.js"></script>
-
-</body>
-</html>

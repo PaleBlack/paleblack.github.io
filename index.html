@@ -49,11 +49,14 @@ layout: startpage
             {% assign concerts = site.concerts | sort: 'date' | reverse %}
             {% for concert in concerts %}
             <article>
-                <a href="#" class="image featured"><img src="images/concerts/{{concert.image}}" alt="{{concert.title}}"/></a>
+                <div class="image featured">
+                    {% if concert.link %}<a href="{{concert.link}}">{% endif %}
+                    <img src="images/concerts/{{concert.image}}" alt="{{concert.title}}"/>
+                    {% if concert.link %}</a>{% endif %}
+                </div>
                 <div class="inner">
                     <h3>{{concert.title}}</h3>
-
-                    <p>{% if concert.nodate %}{{}}{% else %}{{ concert.date | date: "%b %-d, %Y" }}{% endif %}</p>
+                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/german-date.html date=concert.date %}{% endif %}</p>
                     <p>{{concert.text}}</p>
                 </div>
             </article>
@@ -108,7 +111,7 @@ layout: startpage
         <section id="members" class="container special">
             <header>
                 <h2>Mitglieder</h2>
-                <p>Diese fünf Frohnaturen nehmen ausser ihrer eigenen Musik kaum etwas ernst.</p>
+                <p>Diese fünf Frohnaturen nehmen ausser ihrer eigenen Musik kaum etwas ernst</p>
             </header>
             <div class="row">
                 <article class="4u 12u(mobile) special">
@@ -222,19 +225,19 @@ layout: startpage
                             <h3>Kontakt</h3>
                         </header>
                         <p>Wir freuen uns über euren Support auf <a
-                                href=https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a> und <a
-                                href="https://soundcloud.com/pale-black-712434955">Soundcloud</a>. Falls ihr uns für
+                                href="{{site.facebook-url}}">Facebook</a> und <a
+                                href="{{site.soundcloud-url}}">Soundcloud</a>. Falls ihr uns für
                             einen
-                            Aufritt buchen möchtet, meldet euch am Besten via <a href="mailto:pale_black@outlook.com">Email</a>
-                            oder <a href="https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a>.</p>
+                            Aufritt buchen möchtet, meldet euch am Besten via <a href="{{site.mail-url}}">Email</a>
+                            oder <a href="{{site.facebook-url}}">Facebook</a>.</p>
                         <ul class="icons">
-                            <li><a href="mailto:pale_black@outlook.com" class="icon fa-envelope"><span class="label">Mail</span></a>
+                            <li><a href="{{site.mail-url}}" class="icon fa-envelope"><span class="label">Mail</span></a>
                             </li>
-                            <li><a href="https://www.facebook.com/pages/Pale-Black/878060698885724"
+                            <li><a href="{{site.facebook-url}}"
                                    class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-                            <li><a href="https://soundcloud.com/pale-black-712434955" class="icon fa-soundcloud"><span
+                            <li><a href="{{site.soundcloud-url}}" class="icon fa-soundcloud"><span
                                     class="label">Soundcloud</span></a></li>
-                            <li><a href="https://github.com/PaleBlack/paleblack.github.io" class="icon fa-github"><span
+                            <li><a href="{{site.github-url}}" class="icon fa-github"><span
                                     class="label">Github</span></a></li>
                         </ul>
                     </section>

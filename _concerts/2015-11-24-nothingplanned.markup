@@ -1,9 +1,11 @@
 ---
 title: Aktuell sind leider keine Konzerte geplant
-text: Wir proben fleissig und warten auf die Einladung zu deinem Event. Kontaktiere uns einfach via
-                              <a href="mailto:pale_black@outlook.com">Email</a> oder <a
-                                      href="https://www.facebook.com/pages/Pale-Black/878060698885724">Facebook</a>
+title-en: Unfortunately no concerts are planned at the moment.
 image: proben.jpg
+text: Wir proben fleissig und warten auf die Einladung zu deinem Event. Kontaktiere uns einfach via
+                              <a href="!MAIL-URL!">Email</a> oder <a href="!FACEBOOK-URL!">Facebook</a>
+text-en: We're dilligently practicing and await an invitation to play at your event. Please contact us via
+                              <a href="!MAIL-URL!">mail</a> or <a href="!FACEBOOK-URL!">facebook</a>
 date: 2015-11-24
 nodate: true
 ---
