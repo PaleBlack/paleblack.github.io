@@ -12,9 +12,8 @@
 			carousels: {
 				speed: 4,
 				fadeIn: true,
-				fadeDelay: 250
-			},
-
+				fadeDelay: 50
+			}
 	};
 
 	skel.breakpoints({
@@ -98,151 +97,476 @@
 						.css('transition', 'none');
 
 		// Carousels.
-			$('.carousel').each(function() {
+		var a = function() {
 
-				var	$t = $(this),
-					$forward = $('<span class="forward"></span>'),
-					$backward = $('<span class="backward"></span>'),
-					$reel = $t.children('.reel'),
-					$items = $reel.children('article');
+			var	$t = $(this),
+				$forward = $('<span class="forward"></span>'),
+				$backward = $('<span class="backward"></span>'),
+				$reel = $t.children('.reel'),
+				$items = $reel.children('article');
 
-				var	pos = 0,
-					leftLimit,
-					rightLimit,
-					itemWidth,
-					reelWidth,
-					timerId;
+			var	pos = 0,
+				leftLimit,
+				rightLimit,
+				itemWidth,
+				reelWidth,
+				timerId;
 
-				// Items.
-					if (settings.carousels.fadeIn) {
+			// Items.
+			if (settings.carousels.fadeIn) {
 
-						$items.addClass('loading');
+				$items.addClass('loading');
 
-						$t.onVisible(function() {
-							var	timerId,
-								limit = $items.length - Math.ceil($window.width() / itemWidth);
+				$t.onVisible(function() {
+					var	timerId,
+						limit = $items.length - Math.ceil($window.width() / itemWidth);
 
-							timerId = window.setInterval(function() {
-								var x = $items.filter('.loading'), xf = x.first();
+					timerId = window.setInterval(function() {
+						var x = $items.filter('.loading'), xf = x.first();
 
-								if (x.length <= limit) {
+						if (x.length <= limit) {
 
-									window.clearInterval(timerId);
-									$items.removeClass('loading');
-									return;
+							window.clearInterval(timerId);
+							$items.removeClass('loading');
+							return;
 
-								}
+						}
 
-								if (skel.vars.IEVersion < 10) {
+						if (skel.vars.IEVersion < 10) {
 
-									xf.fadeTo(750, 1.0);
-									window.setTimeout(function() {
-										xf.removeClass('loading');
-									}, 50);
+							xf.fadeTo(750, 1.0);
+							window.setTimeout(function() {
+								xf.removeClass('loading');
+							}, 50);
 
-								}
-								else
-									xf.removeClass('loading');
+						}
+						else
+							xf.removeClass('loading');
 
-							}, settings.carousels.fadeDelay);
-						}, 50);
+					}, settings.carousels.fadeDelay);
+				}, 50);
+			}
+
+			// Main.
+			$t._update = function() {
+				pos = 0;
+				rightLimit = (-1 * reelWidth) + $window.width();
+				leftLimit = 0;
+				$t._updatePos();
+			};
+
+			if (skel.vars.IEVersion < 9)
+				$t._updatePos = function() { $reel.css('left', pos); };
+			else
+				$t._updatePos = function() { $reel.css('transform', 'translate(' + pos + 'px, 0)'); };
+
+			// Forward.
+			$forward
+				.appendTo($t)
+				.hide()
+				.mouseenter(function(e) {
+					timerId = window.setInterval(function() {
+						pos -= settings.carousels.speed;
+
+						if (pos <= rightLimit)
+						{
+							window.clearInterval(timerId);
+							pos = rightLimit;
+						}
+
+						$t._updatePos();
+					}, 10);
+				})
+				.mouseleave(function(e) {
+					window.clearInterval(timerId);
+				});
+
+			// Backward.
+			$backward
+				.appendTo($t)
+				.hide()
+				.mouseenter(function(e) {
+					timerId = window.setInterval(function() {
+						pos += settings.carousels.speed;
+
+						if (pos >= leftLimit) {
+
+                            window.clearInterval(timerId);
+                            pos = leftLimit;
+
+                        }
+
+                        $t._updatePos();
+                    }, 10);
+                })
+                .mouseleave(function(e) {
+                    window.clearInterval(timerId);
+                });
+
+            // Init.
+            $window.load(function() {
+
+                reelWidth = $reel[0].scrollWidth;
+
+                skel.on('change', function() {
+
+                    if (skel.vars.touch) {
+
+                        $reel
+                            .css('overflow-y', 'hidden')
+                            .css('overflow-x', 'scroll')
+                            .scrollLeft(0);
+                        $forward.hide();
+                        $backward.hide();
+
+                    }
+                    else {
+
+                        $reel
+                            .css('overflow', 'visible')
+                            .scrollLeft(0);
+                        $forward.show();
+                        $backward.show();
+
+                    }
+
+                    $t._update();
+
+                });
+
+                $window.resize(function() {
+                    reelWidth = $reel[0].scrollWidth;
+                    $t._update();
+                }).trigger('resize');
+
+            });
+
+        };
+		var initializeCarousel = function () {
+
+			var $t = $(this),
+				$forward = $('<span class="forward"></span>'),
+				$backward = $('<span class="backward"></span>'),
+				$reel = $t.children('.reel'),
+				$items = $reel.children('article');
+
+			var pos = 0,
+				leftLimit,
+				rightLimit,
+				itemWidth,
+				reelWidth,
+				timerId;
+
+			// Items.
+			if (settings.carousels.fadeIn) {
+
+				$items.addClass('loading');
+
+				$t.onVisible(function () {
+					var timerId,
+						limit = $items.length - Math.ceil($window.width() / itemWidth);
+
+					timerId = window.setInterval(function () {
+						var x = $items.filter('.loading'), xf = x.first();
+
+						if (x.length <= limit) {
+
+							window.clearInterval(timerId);
+							$items.removeClass('loading');
+							return;
+
+						}
+
+						if (skel.vars.IEVersion < 10) {
+
+							xf.fadeTo(750, 1.0);
+							window.setTimeout(function () {
+								xf.removeClass('loading');
+							}, 50);
+
+						}
+						else
+							xf.removeClass('loading');
+
+					}, settings.carousels.fadeDelay);
+				}, 50);
+			}
+
+			// Main.
+			$t._update = function () {
+				pos = 0;
+				rightLimit = (-1 * reelWidth) + $window.width();
+				leftLimit = 0;
+				$t._updatePos();
+			};
+
+			if (skel.vars.IEVersion < 9)
+				$t._updatePos = function () {
+					$reel.css('left', pos);
+				};
+			else
+				$t._updatePos = function () {
+					$reel.css('transform', 'translate(' + pos + 'px, 0)');
+				};
+
+			// Forward.
+			$forward
+				.appendTo($t)
+				.hide()
+				.mouseenter(function (e) {
+					timerId = window.setInterval(function () {
+						pos -= settings.carousels.speed;
+
+						if (pos <= rightLimit) {
+							window.clearInterval(timerId);
+							pos = rightLimit;
+						}
+
+						$t._updatePos();
+					}, 10);
+				})
+				.mouseleave(function (e) {
+					window.clearInterval(timerId);
+				});
+
+			// Backward.
+			$backward
+				.appendTo($t)
+                .hide()
+                .mouseenter(function (e) {
+                    timerId = window.setInterval(function () {
+                        pos += settings.carousels.speed;
+
+                        if (pos >= leftLimit) {
+
+                            window.clearInterval(timerId);
+                            pos = leftLimit;
+
+                        }
+
+                        $t._updatePos();
+                    }, 10);
+                })
+                .mouseleave(function (e) {
+                    window.clearInterval(timerId);
+                });
+
+            // Init.
+			var activateSkel = function () {
+
+				reelWidth = $reel[0].scrollWidth;
+
+				skel.on('change', function () {
+
+					if (skel.vars.touch) {
+
+						$reel
+							.css('overflow-y', 'hidden')
+							.css('overflow-x', 'scroll')
+							.scrollLeft(0);
+						$forward.hide();
+						$backward.hide();
+
+					}
+					else {
+
+						$reel
+							.css('overflow', 'visible')
+							.scrollLeft(0);
+						$forward.show();
+						$backward.show();
+
 					}
 
-				// Main.
-					$t._update = function() {
-						pos = 0;
-						rightLimit = (-1 * reelWidth) + $window.width();
-						leftLimit = 0;
-						$t._updatePos();
+					$t._update();
+
+				});
+
+				$window.resize(function () {
+					reelWidth = $reel[0].scrollWidth;
+					$t._update();
+				}).trigger('resize');
+
+			};
+
+			if ($t.hasClass("serverside")) {
+				$window.load(activateSkel);
+			}
+			else {
+				activateSkel()
+			}
+
+        };
+        $('.carousel.serverside').each(initializeCarousel);
+
+		//Activities
+		// Prevent loading of activities stream of no activities container is present
+		if(!$("#activities").length) {return}
+
+		// Global for JSONP tweet callback
+		window.loadTweets = window.loadTweets || [];
+
+		var PATTERN_TWITTER_TIMESTAMP = /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]+)\+[0-9]+/;
+
+		function parseTime(pattern, value) {
+			pattern.exec(value);
+			// Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+			return new Date(RegExp.$1, RegExp.$2 - 1, RegExp.$3, RegExp.$4, RegExp.$5, RegExp.$6).getTime();
+		}
+
+		function htmlEscape(str) {
+			return String(str)
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;');
+		}
+
+		// Provider for activities in the stream
+		var Provider = function (config) {
+			this.config = config;
+			this.handle = config.handle;
+		};
+
+		// Default AJAX load
+		Provider.prototype.load = function (callback) {
+			var self = this;
+			$.get(self.config.source, function(data) {
+				callback(self.handle(data));
+			});
+		};
+
+		// Tweets. Since there is no authentication-free tweet search API and we've got
+		// no server-side component, we'll use a twitter widget as the data source.
+		// this means we have to parse the widget HTML to retrieve data.
+		var TweetsForWidget = function (widgetId) {
+			var result = [];
+			var knownTweets = [];
+
+			loadTweets.push(function (data) {
+				$(data.body).find("li.tweet").each(function (_, elem) {
+					var tweet = {
+						type: "tweet"
 					};
-
-					if (skel.vars.IEVersion < 9)
-						$t._updatePos = function() { $reel.css('left', pos); };
-					else
-						$t._updatePos = function() { $reel.css('transform', 'translate(' + pos + 'px, 0)'); };
-
-				// Forward.
-					$forward
-						.appendTo($t)
-						.hide()
-						.mouseenter(function(e) {
-							timerId = window.setInterval(function() {
-								pos -= settings.carousels.speed;
-
-								if (pos <= rightLimit)
-								{
-									window.clearInterval(timerId);
-									pos = rightLimit;
-								}
-
-								$t._updatePos();
-							}, 10);
-						})
-						.mouseleave(function(e) {
-							window.clearInterval(timerId);
-						});
-
-				// Backward.
-					$backward
-						.appendTo($t)
-						.hide()
-						.mouseenter(function(e) {
-							timerId = window.setInterval(function() {
-								pos += settings.carousels.speed;
-
-								if (pos >= leftLimit) {
-
-									window.clearInterval(timerId);
-									pos = leftLimit;
-
-								}
-
-								$t._updatePos();
-							}, 10);
-						})
-						.mouseleave(function(e) {
-							window.clearInterval(timerId);
-						});
-
-				// Init.
-					$window.load(function() {
-
-						reelWidth = $reel[0].scrollWidth;
-
-						skel.on('change', function() {
-
-							if (skel.vars.touch) {
-
-								$reel
-									.css('overflow-y', 'hidden')
-									.css('overflow-x', 'scroll')
-									.scrollLeft(0);
-								$forward.hide();
-								$backward.hide();
-
-							}
-							else {
-
-								$reel
-									.css('overflow', 'visible')
-									.scrollLeft(0);
-								$forward.show();
-								$backward.show();
-
-							}
-
-							$t._update();
-
-						});
-
-						$window.resize(function() {
-							reelWidth = $reel[0].scrollWidth;
-							$t._update();
-						}).trigger('resize');
-
+					var $elem = $(elem);
+					var tweetPermalink;
+					$elem.find("a.u-url.permalink").each(function (_, elem) {
+						tweetPermalink = elem.href;
 					});
 
+					if (knownTweets[tweetPermalink]) {
+						return;
+					}
+
+					knownTweets[tweetPermalink] = true;
+					tweet.url = tweetPermalink;
+
+					$elem.find("time.dt-updated").each(function (_, elem) {
+						tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
+					});
+					$elem.find("p.e-entry-title").each(function (_, elem) {
+						tweet.message = elem.innerHTML;
+					});
+
+					$elem.find("img.autosized-media").each(function (_, elem) {
+						tweet.srcset = decodeURIComponent(elem.dataset.srcset);
+					});
+
+					result.push(tweet);
+				});
+
+				return result;
 			});
+
+			var provider = new Provider({
+				source: "https://cdn.syndication.twimg.com/widgets/timelines/" + widgetId + "?lang=en&callback=loadTweets[" + (loadTweets.length - 1) + "]&suppress_response_codes=true"
+			});
+
+			provider.load = function (callback) {
+				$.ajax({
+					url: provider.config.source,
+					dataType: "script",
+					success: function () {
+						callback(result);
+					},
+					error: function (script) {
+						throw new Error("Could not load script " + script);
+					}
+				});
+			};
+			return  provider;
+		};
+
+		// Register the providers that shall provide activities
+		var providers = [
+			TweetsForWidget("670990882267643905")
+		];
+
+		// Invokes a callback once a certain number of operations have finished
+		var Barrier = function (i, callback) {
+			return {
+				expected: i,
+				count: 0,
+				done: function (data) {
+					if (++this.count == this.expected) {
+						callback(data)
+					}
+				}
+			};
+		};
+
+		// New barrier instance. Callback sorts and renders the activities.
+		var b = Barrier(providers.length, function (activities) {
+			var $ul = $('<div class="reel">');
+			var $li = $('<article>');
+
+			activities.sort(function (a, b) {
+				return b.time - a.time;
+			});
+
+			$.each(activities, function (idx, activity) {
+				var activityHtml = '<div class="image featured"><a href="'+activity.url+'">';
+				if (activity.srcset) {
+					activityHtml += '<img srcset="'+activity.srcset+'" width="100%" />';
+				} else {
+					activityHtml += '<img src="/images/avatar.png" width="100%" />';
+				}
+				activityHtml += '</a></div>';
+				activityHtml +=
+					'<div class="inner">' +
+						'<p>'+new Date(activity.time).toDateString()+'</p>' +
+						'<p>'+activity.message+'</p>' +
+					'</div>';
+
+				$li.append(activityHtml);
+				//$li.append('<div class="' + activity.type + ' activity">' +
+				//	'<a href="' + activity.url + '" class="activity-link mega-octicon octicon-' + activity.type + '"></a>' +
+				//	' <span class="date">' + new Date(activity.time).toDateString() + '</span>: ' +
+				//	activity.message +
+				//	'<img srcset="' + activity.srcset + '" width="100%"/>' +
+				//	'</div>');
+
+				$ul.append($li);
+				$li = $("<article>");
+			});
+
+			var activitiesContainer = $("#activities");
+			activitiesContainer.find(".spinner").fadeOut(function() {
+				activitiesContainer.append($ul);
+				activitiesContainer.each(initializeCarousel);
+			});
+		});
+
+		// Global list of all collected activities
+		var activities = [];
+
+		// Invoke all providers, using the barrier created above
+		$.each(providers, function (_, provider) {
+			provider.load(function (a) {
+				activities = activities.concat(a);
+				b.done(activities);
+			});
+		});
 
 	});
 
