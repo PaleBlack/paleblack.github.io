@@ -58,7 +58,7 @@
 /* Basic */
 
 	body {
-		background: #f0f4f4;
+		background: #c0c0c0;
 		color: #5b5b5b;
 		font-size: 15pt;
 		line-height: 1.85em;
@@ -361,7 +361,7 @@
 					color: inherit;
 
 					&:hover {
-						color: #ef8376;
+						color: #766f7a;
 					}
 				}
 			}
@@ -947,7 +947,7 @@
 				width: 6em;
 				height: 6em;
 				border-radius: 100%;
-				background-color: rgba(72, 57, 73, 0.5);
+				background-color: rgba(37, 37, 37, 0.5);
 				position: absolute;
 				top: 50%;
 				margin-top: -3em;
@@ -971,7 +971,7 @@
 
 			&:hover {
 				&:before {
-					background-color: rgba(239, 131, 118, 0.75);
+					background-color: rgba(182, 130, 128, 0.75);
 				}
 			}
 		}
