@@ -1,195 +1,201 @@
 /*
-	Helios by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
+ Helios by HTML5 UP
+ html5up.net | @n33co
+ Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+ */
 
-(function($) {
+var settings = {
 
-	var settings = {
+    // Carousels
+    carousels: {
+        speed: 4,
+        fadeIn: true,
+        fadeDelay: 50
+    },
+    dateFormatOption: {
+        year: "numeric", month: "long", day: "numeric"
+    },
+    locale: 'de'
+};
 
-		// Carousels
-			carousels: {
-				speed: 4,
-				fadeIn: true,
-				fadeDelay: 50
-			}
-	};
+(function ($) {
+    skel.breakpoints({
+        wide: '(max-width: 1680px)',
+        normal: '(max-width: 1280px)',
+        narrow: '(max-width: 960px)',
+        narrower: '(max-width: 840px)',
+        mobile: '(max-width: 736px)'
+    });
 
-	skel.breakpoints({
-		wide: '(max-width: 1680px)',
-		normal: '(max-width: 1280px)',
-		narrow: '(max-width: 960px)',
-		narrower: '(max-width: 840px)',
-		mobile: '(max-width: 736px)'
-	});
+    $(function () {
 
-	$(function() {
+        var $window = $(window),
+            $body = $('body');
 
-		var	$window = $(window),
-			$body = $('body');
+        // Disable animations/transitions until the page has loaded.
+        $body.addClass('is-loading');
 
-		// Disable animations/transitions until the page has loaded.
-			$body.addClass('is-loading');
+        $window.on('load', function () {
+            $body.removeClass('is-loading');
+        });
 
-			$window.on('load', function() {
-				$body.removeClass('is-loading');
-			});
+        // CSS polyfills (IE<9).
+        if (skel.vars.IEVersion < 9)
+            $(':last-child').addClass('last-child');
 
-		// CSS polyfills (IE<9).
-			if (skel.vars.IEVersion < 9)
-				$(':last-child').addClass('last-child');
+        // Fix: Placeholder polyfill.
+        $('form').placeholder();
 
-		// Fix: Placeholder polyfill.
-			$('form').placeholder();
+        // Prioritize "important" elements on mobile.
+        skel.on('+mobile -mobile', function () {
+            $.prioritize(
+                '.important\\28 mobile\\29',
+                skel.breakpoint('mobile').active
+            );
+        });
 
-		// Prioritize "important" elements on mobile.
-			skel.on('+mobile -mobile', function() {
-				$.prioritize(
-					'.important\\28 mobile\\29',
-					skel.breakpoint('mobile').active
-				);
-			});
+        // Dropdowns.
+        $('#nav > ul').dropotron({
+            mode: 'fade',
+            speed: 350,
+            noOpenerFade: true,
+            alignment: 'center'
+        });
 
-		// Dropdowns.
-			$('#nav > ul').dropotron({
-				mode: 'fade',
-				speed: 350,
-				noOpenerFade: true,
-				alignment: 'center'
-			});
+        // Scrolly links.
+        $('.scrolly').scrolly();
 
-		// Scrolly links.
-			$('.scrolly').scrolly();
+        // Off-Canvas Navigation.
 
-		// Off-Canvas Navigation.
+        // Navigation Button.
+        $(
+            '<div id="navButton">' +
+            '<a href="#navPanel" class="toggle"></a>' +
+            '</div>'
+        )
+            .appendTo($body);
 
-			// Navigation Button.
-				$(
-					'<div id="navButton">' +
-						'<a href="#navPanel" class="toggle"></a>' +
-					'</div>'
-				)
-					.appendTo($body);
+        // Navigation Panel.
+        $(
+            '<div id="navPanel">' +
+            '<nav>' +
+            $('#nav').navList() +
+            '</nav>' +
+            '</div>'
+        )
+            .appendTo($body)
+            .panel({
+                delay: 500,
+                hideOnClick: true,
+                hideOnSwipe: true,
+                resetScroll: true,
+                resetForms: true,
+                target: $body,
+                visibleClass: 'navPanel-visible'
+            });
 
-			// Navigation Panel.
-				$(
-					'<div id="navPanel">' +
-						'<nav>' +
-							$('#nav').navList() +
-						'</nav>' +
-					'</div>'
-				)
-					.appendTo($body)
-					.panel({
-						delay: 500,
-						hideOnClick: true,
-						hideOnSwipe: true,
-						resetScroll: true,
-						resetForms: true,
-						target: $body,
-						visibleClass: 'navPanel-visible'
-					});
+        // Fix: Remove navPanel transitions on WP<10 (poor/buggy performance).
+        if (skel.vars.os == 'wp' && skel.vars.osVersion < 10)
+            $('#navButton, #navPanel, #page-wrapper')
+                .css('transition', 'none');
 
-			// Fix: Remove navPanel transitions on WP<10 (poor/buggy performance).
-				if (skel.vars.os == 'wp' && skel.vars.osVersion < 10)
-					$('#navButton, #navPanel, #page-wrapper')
-						.css('transition', 'none');
+        // Carousels.
+        var a = function () {
 
-		// Carousels.
-		var a = function() {
+            var $t = $(this),
+                $forward = $('<span class="forward"></span>'),
+                $backward = $('<span class="backward"></span>'),
+                $reel = $t.children('.reel'),
+                $items = $reel.children('article');
 
-			var	$t = $(this),
-				$forward = $('<span class="forward"></span>'),
-				$backward = $('<span class="backward"></span>'),
-				$reel = $t.children('.reel'),
-				$items = $reel.children('article');
+            var pos = 0,
+                leftLimit,
+                rightLimit,
+                itemWidth,
+                reelWidth,
+                timerId;
 
-			var	pos = 0,
-				leftLimit,
-				rightLimit,
-				itemWidth,
-				reelWidth,
-				timerId;
+            // Items.
+            if (settings.carousels.fadeIn) {
 
-			// Items.
-			if (settings.carousels.fadeIn) {
+                $items.addClass('loading');
 
-				$items.addClass('loading');
+                $t.onVisible(function () {
+                    var timerId,
+                        limit = $items.length - Math.ceil($window.width() / itemWidth);
 
-				$t.onVisible(function() {
-					var	timerId,
-						limit = $items.length - Math.ceil($window.width() / itemWidth);
+                    timerId = window.setInterval(function () {
+                        var x = $items.filter('.loading'), xf = x.first();
 
-					timerId = window.setInterval(function() {
-						var x = $items.filter('.loading'), xf = x.first();
+                        if (x.length <= limit) {
 
-						if (x.length <= limit) {
+                            window.clearInterval(timerId);
+                            $items.removeClass('loading');
+                            return;
 
-							window.clearInterval(timerId);
-							$items.removeClass('loading');
-							return;
+                        }
 
-						}
+                        if (skel.vars.IEVersion < 10) {
 
-						if (skel.vars.IEVersion < 10) {
+                            xf.fadeTo(750, 1.0);
+                            window.setTimeout(function () {
+                                xf.removeClass('loading');
+                            }, 50);
 
-							xf.fadeTo(750, 1.0);
-							window.setTimeout(function() {
-								xf.removeClass('loading');
-							}, 50);
+                        }
+                        else
+                            xf.removeClass('loading');
 
-						}
-						else
-							xf.removeClass('loading');
+                    }, settings.carousels.fadeDelay);
+                }, 50);
+            }
 
-					}, settings.carousels.fadeDelay);
-				}, 50);
-			}
+            // Main.
+            $t._update = function () {
+                pos = 0;
+                rightLimit = (-1 * reelWidth) + $window.width();
+                leftLimit = 0;
+                $t._updatePos();
+            };
 
-			// Main.
-			$t._update = function() {
-				pos = 0;
-				rightLimit = (-1 * reelWidth) + $window.width();
-				leftLimit = 0;
-				$t._updatePos();
-			};
+            if (skel.vars.IEVersion < 9)
+                $t._updatePos = function () {
+                    $reel.css('left', pos);
+                };
+            else
+                $t._updatePos = function () {
+                    $reel.css('transform', 'translate(' + pos + 'px, 0)');
+                };
 
-			if (skel.vars.IEVersion < 9)
-				$t._updatePos = function() { $reel.css('left', pos); };
-			else
-				$t._updatePos = function() { $reel.css('transform', 'translate(' + pos + 'px, 0)'); };
+            // Forward.
+            $forward
+                .appendTo($t)
+                .hide()
+                .mouseenter(function (e) {
+                    timerId = window.setInterval(function () {
+                        pos -= settings.carousels.speed;
 
-			// Forward.
-			$forward
-				.appendTo($t)
-				.hide()
-				.mouseenter(function(e) {
-					timerId = window.setInterval(function() {
-						pos -= settings.carousels.speed;
+                        if (pos <= rightLimit) {
+                            window.clearInterval(timerId);
+                            pos = rightLimit;
+                        }
 
-						if (pos <= rightLimit)
-						{
-							window.clearInterval(timerId);
-							pos = rightLimit;
-						}
+                        $t._updatePos();
+                    }, 10);
+                })
+                .mouseleave(function (e) {
+                    window.clearInterval(timerId);
+                });
 
-						$t._updatePos();
-					}, 10);
-				})
-				.mouseleave(function(e) {
-					window.clearInterval(timerId);
-				});
+            // Backward.
+            $backward
+                .appendTo($t)
+                .hide()
+                .mouseenter(function (e) {
+                    timerId = window.setInterval(function () {
+                        pos += settings.carousels.speed;
 
-			// Backward.
-			$backward
-				.appendTo($t)
-				.hide()
-				.mouseenter(function(e) {
-					timerId = window.setInterval(function() {
-						pos += settings.carousels.speed;
-
-						if (pos >= leftLimit) {
+                        if (pos >= leftLimit) {
 
                             window.clearInterval(timerId);
                             pos = leftLimit;
@@ -199,16 +205,16 @@
                         $t._updatePos();
                     }, 10);
                 })
-                .mouseleave(function(e) {
+                .mouseleave(function (e) {
                     window.clearInterval(timerId);
                 });
 
             // Init.
-            $window.load(function() {
+            $window.load(function () {
 
                 reelWidth = $reel[0].scrollWidth;
 
-                skel.on('change', function() {
+                skel.on('change', function () {
 
                     if (skel.vars.touch) {
 
@@ -234,7 +240,7 @@
 
                 });
 
-                $window.resize(function() {
+                $window.resize(function () {
                     reelWidth = $reel[0].scrollWidth;
                     $t._update();
                 }).trigger('resize');
@@ -242,96 +248,96 @@
             });
 
         };
-		var initializeCarousel = function () {
+        var initializeCarousel = function () {
 
-			var $t = $(this),
-				$forward = $('<span class="forward"></span>'),
-				$backward = $('<span class="backward"></span>'),
-				$reel = $t.children('.reel'),
-				$items = $reel.children('article');
+            var $t = $(this),
+                $forward = $('<span class="forward"></span>'),
+                $backward = $('<span class="backward"></span>'),
+                $reel = $t.children('.reel'),
+                $items = $reel.children('article');
 
-			var pos = 0,
-				leftLimit,
-				rightLimit,
-				itemWidth,
-				reelWidth,
-				timerId;
+            var pos = 0,
+                leftLimit,
+                rightLimit,
+                itemWidth,
+                reelWidth,
+                timerId;
 
-			// Items.
-			if (settings.carousels.fadeIn) {
+            // Items.
+            if (settings.carousels.fadeIn) {
 
-				$items.addClass('loading');
+                $items.addClass('loading');
 
-				$t.onVisible(function () {
-					var timerId,
-						limit = $items.length - Math.ceil($window.width() / itemWidth);
+                $t.onVisible(function () {
+                    var timerId,
+                        limit = $items.length - Math.ceil($window.width() / itemWidth);
 
-					timerId = window.setInterval(function () {
-						var x = $items.filter('.loading'), xf = x.first();
+                    timerId = window.setInterval(function () {
+                        var x = $items.filter('.loading'), xf = x.first();
 
-						if (x.length <= limit) {
+                        if (x.length <= limit) {
 
-							window.clearInterval(timerId);
-							$items.removeClass('loading');
-							return;
+                            window.clearInterval(timerId);
+                            $items.removeClass('loading');
+                            return;
 
-						}
+                        }
 
-						if (skel.vars.IEVersion < 10) {
+                        if (skel.vars.IEVersion < 10) {
 
-							xf.fadeTo(750, 1.0);
-							window.setTimeout(function () {
-								xf.removeClass('loading');
-							}, 50);
+                            xf.fadeTo(750, 1.0);
+                            window.setTimeout(function () {
+                                xf.removeClass('loading');
+                            }, 50);
 
-						}
-						else
-							xf.removeClass('loading');
+                        }
+                        else
+                            xf.removeClass('loading');
 
-					}, settings.carousels.fadeDelay);
-				}, 50);
-			}
+                    }, settings.carousels.fadeDelay);
+                }, 50);
+            }
 
-			// Main.
-			$t._update = function () {
-				pos = 0;
-				rightLimit = (-1 * reelWidth) + $window.width();
-				leftLimit = 0;
-				$t._updatePos();
-			};
+            // Main.
+            $t._update = function () {
+                pos = 0;
+                rightLimit = (-1 * reelWidth) + $window.width();
+                leftLimit = 0;
+                $t._updatePos();
+            };
 
-			if (skel.vars.IEVersion < 9)
-				$t._updatePos = function () {
-					$reel.css('left', pos);
-				};
-			else
-				$t._updatePos = function () {
-					$reel.css('transform', 'translate(' + pos + 'px, 0)');
-				};
+            if (skel.vars.IEVersion < 9)
+                $t._updatePos = function () {
+                    $reel.css('left', pos);
+                };
+            else
+                $t._updatePos = function () {
+                    $reel.css('transform', 'translate(' + pos + 'px, 0)');
+                };
 
-			// Forward.
-			$forward
-				.appendTo($t)
-				.hide()
-				.mouseenter(function (e) {
-					timerId = window.setInterval(function () {
-						pos -= settings.carousels.speed;
+            // Forward.
+            $forward
+                .appendTo($t)
+                .hide()
+                .mouseenter(function (e) {
+                    timerId = window.setInterval(function () {
+                        pos -= settings.carousels.speed;
 
-						if (pos <= rightLimit) {
-							window.clearInterval(timerId);
-							pos = rightLimit;
-						}
+                        if (pos <= rightLimit) {
+                            window.clearInterval(timerId);
+                            pos = rightLimit;
+                        }
 
-						$t._updatePos();
-					}, 10);
-				})
-				.mouseleave(function (e) {
-					window.clearInterval(timerId);
-				});
+                        $t._updatePos();
+                    }, 10);
+                })
+                .mouseleave(function (e) {
+                    window.clearInterval(timerId);
+                });
 
-			// Backward.
-			$backward
-				.appendTo($t)
+            // Backward.
+            $backward
+                .appendTo($t)
                 .hide()
                 .mouseenter(function (e) {
                     timerId = window.setInterval(function () {
@@ -352,222 +358,224 @@
                 });
 
             // Init.
-			var activateSkel = function () {
+            var activateSkel = function () {
 
-				reelWidth = $reel[0].scrollWidth;
+                reelWidth = $reel[0].scrollWidth;
 
-				skel.on('change', function () {
+                skel.on('change', function () {
 
-					if (skel.vars.touch) {
+                    if (skel.vars.touch) {
 
-						$reel
-							.css('overflow-y', 'hidden')
-							.css('overflow-x', 'scroll')
-							.scrollLeft(0);
-						$forward.hide();
-						$backward.hide();
+                        $reel
+                            .css('overflow-y', 'hidden')
+                            .css('overflow-x', 'scroll')
+                            .scrollLeft(0);
+                        $forward.hide();
+                        $backward.hide();
 
-					}
-					else {
+                    }
+                    else {
 
-						$reel
-							.css('overflow', 'visible')
-							.scrollLeft(0);
-						$forward.show();
-						$backward.show();
+                        $reel
+                            .css('overflow', 'visible')
+                            .scrollLeft(0);
+                        $forward.show();
+                        $backward.show();
 
-					}
+                    }
 
-					$t._update();
+                    $t._update();
 
-				});
+                });
 
-				$window.resize(function () {
-					reelWidth = $reel[0].scrollWidth;
-					$t._update();
-				}).trigger('resize');
+                $window.resize(function () {
+                    reelWidth = $reel[0].scrollWidth;
+                    $t._update();
+                }).trigger('resize');
 
-			};
+            };
 
-			if ($t.hasClass("serverside")) {
-				$window.load(activateSkel);
-			}
-			else {
-				activateSkel()
-			}
+            if ($t.hasClass("serverside")) {
+                $window.load(activateSkel);
+            }
+            else {
+                activateSkel()
+            }
 
         };
         $('.carousel.serverside').each(initializeCarousel);
 
-		//Activities
-		// Prevent loading of activities stream of no activities container is present
-		if(!$("#activities").length) {return}
+        //Activities
+        // Prevent loading of activities stream of no activities container is present
+        if (!$("#activities").length) {
+            return
+        }
 
-		// Global for JSONP tweet callback
-		window.loadTweets = window.loadTweets || [];
+        // Global for JSONP tweet callback
+        window.loadTweets = window.loadTweets || [];
 
-		var PATTERN_TWITTER_TIMESTAMP = /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]+)\+[0-9]+/;
+        var PATTERN_TWITTER_TIMESTAMP = /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]+)\+[0-9]+/;
 
-		function parseTime(pattern, value) {
-			pattern.exec(value);
-			// Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-			return new Date(RegExp.$1, RegExp.$2 - 1, RegExp.$3, RegExp.$4, RegExp.$5, RegExp.$6).getTime();
-		}
+        function parseTime(pattern, value) {
+            pattern.exec(value);
+            // Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+            return new Date(RegExp.$1, RegExp.$2 - 1, RegExp.$3, RegExp.$4, RegExp.$5, RegExp.$6).getTime();
+        }
 
-		function htmlEscape(str) {
-			return String(str)
-				.replace(/"/g, '&quot;')
-				.replace(/'/g, '&#39;')
-				.replace(/</g, '&lt;')
-				.replace(/>/g, '&gt;');
-		}
+        function htmlEscape(str) {
+            return String(str)
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
 
-		// Provider for activities in the stream
-		var Provider = function (config) {
-			this.config = config;
-			this.handle = config.handle;
-		};
+        // Provider for activities in the stream
+        var Provider = function (config) {
+            this.config = config;
+            this.handle = config.handle;
+        };
 
-		// Default AJAX load
-		Provider.prototype.load = function (callback) {
-			var self = this;
-			$.get(self.config.source, function(data) {
-				callback(self.handle(data));
-			});
-		};
+        // Default AJAX load
+        Provider.prototype.load = function (callback) {
+            var self = this;
+            $.get(self.config.source, function (data) {
+                callback(self.handle(data));
+            });
+        };
 
-		// Tweets. Since there is no authentication-free tweet search API and we've got
-		// no server-side component, we'll use a twitter widget as the data source.
-		// this means we have to parse the widget HTML to retrieve data.
-		var TweetsForWidget = function (widgetId) {
-			var result = [];
-			var knownTweets = [];
+        // Tweets. Since there is no authentication-free tweet search API and we've got
+        // no server-side component, we'll use a twitter widget as the data source.
+        // this means we have to parse the widget HTML to retrieve data.
+        var TweetsForWidget = function (widgetId) {
+            var result = [];
+            var knownTweets = [];
 
-			loadTweets.push(function (data) {
-				$(data.body).find("li.tweet").each(function (_, elem) {
-					var tweet = {
-						type: "tweet"
-					};
-					var $elem = $(elem);
-					var tweetPermalink;
-					$elem.find("a.u-url.permalink").each(function (_, elem) {
-						tweetPermalink = elem.href;
-					});
+            loadTweets.push(function (data) {
+                $(data.body).find("li.tweet").each(function (_, elem) {
+                    var tweet = {
+                        type: "tweet"
+                    };
+                    var $elem = $(elem);
+                    var tweetPermalink;
+                    $elem.find("a.u-url.permalink").each(function (_, elem) {
+                        tweetPermalink = elem.href;
+                    });
 
-					if (knownTweets[tweetPermalink]) {
-						return;
-					}
+                    if (knownTweets[tweetPermalink]) {
+                        return;
+                    }
 
-					knownTweets[tweetPermalink] = true;
-					tweet.url = tweetPermalink;
+                    knownTweets[tweetPermalink] = true;
+                    tweet.url = tweetPermalink;
 
-					$elem.find("time.dt-updated").each(function (_, elem) {
-						tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
-					});
-					$elem.find("p.e-entry-title").each(function (_, elem) {
-						tweet.message = elem.innerHTML;
-					});
+                    $elem.find("time.dt-updated").each(function (_, elem) {
+                        tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
+                    });
+                    $elem.find("p.e-entry-title").each(function (_, elem) {
+                        tweet.message = elem.innerHTML;
+                    });
 
-					$elem.find("img.autosized-media").each(function (_, elem) {
-						tweet.srcset = decodeURIComponent(elem.dataset.srcset);
-					});
+                    $elem.find("img.autosized-media").each(function (_, elem) {
+                        tweet.srcset = decodeURIComponent(elem.dataset.srcset);
+                    });
 
-					result.push(tweet);
-				});
+                    result.push(tweet);
+                });
 
-				return result;
-			});
+                return result;
+            });
 
-			var provider = new Provider({
-				source: "https://cdn.syndication.twimg.com/widgets/timelines/" + widgetId + "?lang=en&callback=loadTweets[" + (loadTweets.length - 1) + "]&suppress_response_codes=true"
-			});
+            var provider = new Provider({
+                source: "https://cdn.syndication.twimg.com/widgets/timelines/" + widgetId + "?lang=en&callback=loadTweets[" + (loadTweets.length - 1) + "]&suppress_response_codes=true"
+            });
 
-			provider.load = function (callback) {
-				$.ajax({
-					url: provider.config.source,
-					dataType: "script",
-					success: function () {
-						callback(result);
-					},
-					error: function (script) {
-						throw new Error("Could not load script " + script);
-					}
-				});
-			};
-			return  provider;
-		};
+            provider.load = function (callback) {
+                $.ajax({
+                    url: provider.config.source,
+                    dataType: "script",
+                    success: function () {
+                        callback(result);
+                    },
+                    error: function (script) {
+                        throw new Error("Could not load script " + script);
+                    }
+                });
+            };
+            return provider;
+        };
 
-		// Register the providers that shall provide activities
-		var providers = [
-			TweetsForWidget("670990882267643905")
-		];
+        // Register the providers that shall provide activities
+        var providers = [
+            TweetsForWidget("670990882267643905")
+        ];
 
-		// Invokes a callback once a certain number of operations have finished
-		var Barrier = function (i, callback) {
-			return {
-				expected: i,
-				count: 0,
-				done: function (data) {
-					if (++this.count == this.expected) {
-						callback(data)
-					}
-				}
-			};
-		};
+        // Invokes a callback once a certain number of operations have finished
+        var Barrier = function (i, callback) {
+            return {
+                expected: i,
+                count: 0,
+                done: function (data) {
+                    if (++this.count == this.expected) {
+                        callback(data)
+                    }
+                }
+            };
+        };
 
-		// New barrier instance. Callback sorts and renders the activities.
-		var b = Barrier(providers.length, function (activities) {
-			var $ul = $('<div class="reel">');
-			var $li = $('<article>');
+        // New barrier instance. Callback sorts and renders the activities.
+        var b = Barrier(providers.length, function (activities) {
+            var $ul = $('<div class="reel">');
+            var $li = $('<article>');
 
-			activities.sort(function (a, b) {
-				return b.time - a.time;
-			});
+            activities.sort(function (a, b) {
+                return b.time - a.time;
+            });
 
-			$.each(activities, function (idx, activity) {
-				var activityHtml = '<div class="image featured"><a href="'+activity.url+'">';
-				if (activity.srcset) {
-					activityHtml += '<img srcset="'+activity.srcset+'" width="100%" />';
-				} else {
-					activityHtml += '<img src="/images/avatar.png" width="100%" />';
-				}
-				activityHtml += '</a></div>';
-				activityHtml +=
-					'<div class="inner">' +
-						'<p>'+new Date(activity.time).toDateString()+'</p>' +
-						'<p>'+activity.message+'</p>' +
-					'</div>';
+            $.each(activities, function (idx, activity) {
+                var activityHtml = '<div class="image featured"><a href="' + activity.url + '">';
+                if (activity.srcset) {
+                    activityHtml += '<img srcset="' + activity.srcset + '" width="100%" />';
+                } else {
+                    activityHtml += '<img src="/images/avatar.png" width="100%" />';
+                }
+                activityHtml += '</a></div>';
+                activityHtml +=
+                    '<div class="inner">' +
+                    '<p class="icon fa-twitter">&nbsp;' + new Date(activity.time).toLocaleDateString(settings.locale, settings.dateFormatOption) + '</p>' +
+                    '<p>' + activity.message + '</p>' +
+                    '</div>';
 
-				$li.append(activityHtml);
-				//$li.append('<div class="' + activity.type + ' activity">' +
-				//	'<a href="' + activity.url + '" class="activity-link mega-octicon octicon-' + activity.type + '"></a>' +
-				//	' <span class="date">' + new Date(activity.time).toDateString() + '</span>: ' +
-				//	activity.message +
-				//	'<img srcset="' + activity.srcset + '" width="100%"/>' +
-				//	'</div>');
+                $li.append(activityHtml);
+                //$li.append('<div class="' + activity.type + ' activity">' +
+                //	'<a href="' + activity.url + '" class="activity-link mega-octicon octicon-' + activity.type + '"></a>' +
+                //	' <span class="date">' + new Date(activity.time).toDateString() + '</span>: ' +
+                //	activity.message +
+                //	'<img srcset="' + activity.srcset + '" width="100%"/>' +
+                //	'</div>');
 
-				$ul.append($li);
-				$li = $("<article>");
-			});
+                $ul.append($li);
+                $li = $("<article>");
+            });
 
-			var activitiesContainer = $("#activities");
-			activitiesContainer.find(".spinner").fadeOut(function() {
-				activitiesContainer.append($ul);
-				activitiesContainer.each(initializeCarousel);
-			});
-		});
+            var activitiesContainer = $("#activities");
+            activitiesContainer.find(".spinner").fadeOut(function () {
+                activitiesContainer.append($ul);
+                activitiesContainer.each(initializeCarousel);
+            });
+        });
 
-		// Global list of all collected activities
-		var activities = [];
+        // Global list of all collected activities
+        var activities = [];
 
-		// Invoke all providers, using the barrier created above
-		$.each(providers, function (_, provider) {
-			provider.load(function (a) {
-				activities = activities.concat(a);
-				b.done(activities);
-			});
-		});
+        // Invoke all providers, using the barrier created above
+        $.each(providers, function (_, provider) {
+            provider.load(function (a) {
+                activities = activities.concat(a);
+                b.done(activities);
+            });
+        });
 
-	});
+    });
 
 })(jQuery);

@@ -10,7 +10,6 @@ layout: startpage
         <div class="inner">
             <header>
                 <a href="#about" class="button circled scrolly"></a>
-                <!--<h1><a href="index.html" id="logo">Pale Black</a></h1>-->
                 <hr/>
                 <p>Diversified Death Metal from Switzerland</p>
             </header>
@@ -22,6 +21,7 @@ layout: startpage
         <nav id="nav">
             <ul>
                 <li><a class="scrolly" href="#about">About</a></li>
+                <li><a class="scrolly" href="#activities">News</a></li>
                 <li><a class="scrolly" href="#concerts">Concerts</a></li>
                 <li><a class="scrolly" href="#music">Music</a></li>
                 <li><a class="scrolly" href="#biography">Biography</a></li>
@@ -42,9 +42,24 @@ layout: startpage
         </header>
     </section>
 
+    <!-- Activities -->
+    <section id="activities" class="carousel clientside">
+        <div align="center"><img src="css/images/heart_beat_white.gif" class="spinner"/></div>
+    </section>
 
-    <!-- Carousel -->
-    <section id="concerts" class="carousel">
+    <!-- Music -->
+    <div class="wrapper style1">
+        <article id="music" class="container special">
+            <header>
+                <h2>Music</h2>
+            </header>
+            <iframe width="100%" height="450" scrolling="no" frameborder="no"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/188648420&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=false"></iframe>
+        </article>
+    </div>
+
+    <!-- Concerts -->
+    <section id="concerts" class="carousel serverside">
         <div class="reel">
             {% assign concerts = site.concerts | sort: 'date' | reverse %}
             {% for concert in concerts %}
@@ -64,20 +79,13 @@ layout: startpage
         </div>
     </section>
 
-    <!-- Main -->
-    <div class="wrapper style2">
-        <article id="music" class="container special">
-            <header>
-                <h2>Musik</h2>
-            </header>
-            <iframe width="100%" height="450" scrolling="no" frameborder="no"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/188648420&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=false"></iframe>
-        </article>
 
+    <!--Bio-->
+    <div class="wrapper style1">
         <article id="biography" class="container special">
-            <a href="#" class="image featured"><img src="images/biography.jpg" alt=""/></a>
             <header>
-                <h2>Biografie</h2>
+            <a href="#" class="image featured"><img src="images/biography.jpg" alt=""/></a>
+                <h2>Biography</h2>
                 <p>
                     Alles begann mit zwei Metal begeisterten Freunden im beschaulichen Emmental
                 </p>
@@ -247,7 +255,7 @@ layout: startpage
                     <!-- Copyright -->
                     <div class="copyright">
                         <ul class="menu">
-                            <li>&copy; Untitled. All rights reserved.</li>
+                            <li>&copy; Pale Black. All rights reserved.</li>
                             <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                         </ul>
                     </div>
@@ -259,3 +267,6 @@ layout: startpage
     </div>
 
 </div>
+<script type="application/javascript">
+    settings.locale = 'en';
+</script>
