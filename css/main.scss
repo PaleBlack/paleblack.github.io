@@ -590,6 +590,13 @@
 	}
 
 /* Header */
+	#simple_header {
+		position: relative;
+		color: #fff;
+		text-align: center;
+		padding: 7.5em 0 2em 0;
+		cursor: default;
+	}
 
 	#header {
 		position: relative;
@@ -691,7 +698,14 @@
 				height: 100%;
 				opacity: 0;
 				@include vendor('transition', 'opacity 2.5s ease-in-out');
-				@include vendor('transition-delay', '0.5s');
+				@include vendor('transition-delay', '0.1s');
+			}
+		}
+
+		#simple_header {
+			background: #0c1417;
+			h1 {
+				font-size: 4em;
 			}
 		}
 

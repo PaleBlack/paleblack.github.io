@@ -8,6 +8,8 @@
 {% include head.html %}
 
 <body class="homepage">
+
+
 <div id="page-wrapper">
 
     {% include scripts.html %}
@@ -20,13 +22,13 @@
         <!-- Nav -->
         <nav id="nav">
             <ul>
-                <li><a href="/index.html#about">Über uns</a></li>
-                <li><a href="/index.html#activities">Neuigkeiten</a></li>
-                <li><a href="/index.html#music">Musik</a></li>
-                <li><a href="/index.html#concerts">Auftritte</a></li>
-                <li><a href="/index.html#biography">Biografie</a></li>
-                <li><a href="/index.html#members">Mitglieder</a></li>
-                <li><a href="gallery_en.html">English</a></li>
+                <li><a href="/index_en.html#about">About</a></li>
+                <li><a href="/index_en.html#activities">News</a></li>
+                <li><a href="/index_en.html#concerts">Concerts</a></li>
+                <li><a href="/index_en.html#music">Music</a></li>
+                <li><a href="/index_en.html#biography">Biography</a></li>
+                <li><a href="/index_en.html#members">Members</a></li>
+                <li><a href="gallery.html">Deutsch</a></li>
             </ul>
         </nav>
     </div>
@@ -43,15 +45,13 @@
     </section>
 
     <div class="wrapper style2" align="center">
-        {% for image in gallery.images %}
-        <a href="{{ gallery.imagefolder }}/{{ image.name }}" data-lightbox="{{gallery.id}}"
-           title="{{ image.name }}"><img
-                src="{{ gallery.imagefolder }}/{{ image.name | replace:'.JPG','_thumb.JPG' }}" title="{{ image.name }}"
-                class="image"></a>
-        <!--</div>-->
-        {% endfor %}
+            {% for image in gallery.images %}
+                <a href="{{ gallery.imagefolder }}/{{ image.name }}" data-lightbox="{{gallery.id}}" title="{{ image.name }}"><img
+                        src="{{ gallery.imagefolder }}/{{ image.name | replace:'.JPG','_thumb.JPG' }}" title="{{ image.name }}" class="image"></a>
+                    <!--</div>-->
+            {% endfor %}
     </div>
-    {% endif %}
+        {% endif %}
     {% endfor %}
     {% include functions/replace-urls.html content=content%}
 
