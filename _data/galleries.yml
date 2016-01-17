@@ -1,0 +1,14 @@
+- id: gallery1
+  description: Shit und Schein
+  imagefolder: /galleries/shit-und-schein
+  images:
+  - name: "IMG_2735.JPG"
+  - name: "IMG_2737.JPG"
+  - name: "IMG_2740.JPG"
+  - name: "IMG_2742.JPG"
+  - name: "IMG_2744.JPG"
+  - name: "IMG_2745.JPG"
+  - name: "IMG_2747.JPG"
+  - name: "IMG_2748.JPG"
+  - name: "IMG_2750.JPG"
+  - name: "IMG_2751.JPG"
