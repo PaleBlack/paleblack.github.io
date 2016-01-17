@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<!--
+	Helios by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+{% include head.html %}
+
+<body class="homepage">
+
+
+<div id="page-wrapper">
+
+    {% include scripts.html %}
+    <link href="/css/lightbox.css" rel="stylesheet" property="stylesheet"/>
+    <script src="/assets/js/lightbox.min.js"></script>
+
+
+    <!-- Header -->
+    <div id="simple_header">
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/index_en.html#about">About</a></li>
+                <li><a href="/index_en.html#activities">News</a></li>
+                <li><a href="/index_en.html#concerts">Concerts</a></li>
+                <li><a href="/index_en.html#music">Music</a></li>
+                <li><a href="/index_en.html#biography">Biography</a></li>
+                <li><a href="/index_en.html#members">Members</a></li>
+                <li><a href="gallery.html">Deutsch</a></li>
+            </ul>
+        </nav>
+    </div>
+
+
+    {% for gallery in site.data.galleries %}
+    {% capture imagefolder %}{{gallery.imagefolder}}{% endcapture %}
+    {% capture pagepath %}/{{page.path}}{% endcapture %}
+    {% if pagepath contains imagefolder %}
+    <section id="about" class="banner">
+        <header class="major">
+            <p>{{gallery.description}}</p>
+        </header>
+    </section>
+
+    <div class="wrapper style2" align="center">
+            {% for image in gallery.images %}
+                <a href="{{ gallery.imagefolder }}/{{ image.name }}" data-lightbox="{{gallery.id}}" title="{{ image.name }}"><img
+                        src="{{ gallery.imagefolder }}/{{ image.name | replace:'.JPG','_thumb.JPG' }}" title="{{ image.name }}" class="image"></a>
+                    <!--</div>-->
+            {% endfor %}
+    </div>
+        {% endif %}
+    {% endfor %}
+    {% include functions/replace-urls.html content=content%}
+
+</div>
+</body>
+
+</html>

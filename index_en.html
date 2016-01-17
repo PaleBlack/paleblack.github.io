@@ -172,44 +172,24 @@ layout: startpage
     <div id="footer">
         <div class="container">
             <div class="row">
-                <!-- Photos -->
-                <section class="12u 12u(mobile)">
+                {% for gallery in site.data.galleries %}
+                <section class="4u 12u(mobile)">
                     <header>
                         <h2 class="icon fa-camera circled"><span class="label">Photos</span></h2>
+                        <h3>{{gallery.description}}</h3>
                     </header>
                     <div class="row 25%">
-                        <div class="3u">
-                            <a href="https://www.facebook.com/media/set/?set=a.881902591834868.1073741828.878060698885724&type=3"
-                               class="image fit"><img src="images/gallery/cafete2.jpg" alt="cafete"/></a>
+                        {% for image in gallery.images limit: 6 %}
+                        <div class="6u">
+                            <a href="{{gallery.imagefolder}}/gallery.html" class="image fit">
+                                <img src="{{gallery.imagefolder}}/{{image.name | replace:'.JPG','_thumb.JPG'}}"
+                                     alt="{{image.name}}"/>
+                            </a>
                         </div>
-                        <div class="3u">
-                            <a href="https://www.facebook.com/media/set/?set=a.881902591834868.1073741828.878060698885724&type=3"
-                               class="image fit"><img src="images/gallery/cafete3.jpg" alt="cafete"/></a>
-                        </div>
-                        <div class="3u">
-                            <a href="#" class="image fit"><img src="images/gallery/sursee1.jpg" alt="cafete"/></a>
-                        </div>
-                        <div class="3u$">
-                            <a href="#" class="image fit"><img src="images/gallery/sursee1.jpg" alt="sursee"/></a>
-                        </div>
-                        <div class="3u">
-                            <a href="#" class="image fit"><img src="images/gallery/sursee2.jpg" alt="sursee"/></a>
-                        </div>
-                        <div class="3u">
-                            <a href="https://www.facebook.com/media/set/?set=a.940051739353286.1073741831.878060698885724&type=3"
-                               class="image fit"><img src="images/gallery/shitnschein1.jpg" alt="sursee"/></a>
-                        </div>
-                        <div class="3u">
-                            <a href="https://www.facebook.com/media/set/?set=a.940051739353286.1073741831.878060698885724&type=3"
-                               class="image fit"><img src="images/gallery/shitnschein2.jpg" alt="sursee"/></a>
-                        </div>
-                        <div class="3u">
-                            <a href="https://www.facebook.com/media/set/?set=a.940051739353286.1073741831.878060698885724&type=3"
-                               class="image fit"><img src="images/gallery/shitnschein3.jpg" alt="sursee"/></a>
-                        </div>
+                        {% endfor %}
                     </div>
                 </section>
-
+                {% endfor %}
             </div>
             <hr/>
             <div class="row">

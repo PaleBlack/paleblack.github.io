@@ -1,0 +1,38 @@
+- id: gallery1
+  description: Shit und Schein
+  imagefolder: /galleries/shit-und-schein
+  images:
+  - name: "IMG_2733.JPG"
+  - name: "IMG_2740.JPG"
+  - name: "IMG_2742.JPG"
+  - name: "IMG_2744.JPG"
+  - name: "IMG_2745.JPG"
+  - name: "IMG_2747.JPG"
+  - name: "IMG_2748.JPG"
+  - name: "IMG_2750.JPG"
+  - name: "IMG_2751.JPG"
+
+- id: gallery2
+  description: Hellvetia Day
+  imagefolder: /galleries/hellvetia-day
+  images:
+  - name: "PaleBlack-Sursee-2014-06.JPG"
+  - name: "PaleBlack-Sursee-2014-08.JPG"
+  - name: "PaleBlack-Sursee-2014-09.JPG"
+  - name: "PaleBlack-Sursee-2014-10.JPG"
+  - name: "PaleBlack-Sursee-2014-11.JPG"
+  - name: "PaleBlack-Sursee-2014-13.JPG"
+
+- id: gallery3
+  description: Stage Dive Derby
+  imagefolder: /galleries/stage-dive-derby
+  images:
+  - name: "1.JPG"
+  - name: "2.JPG"
+  - name: "3.JPG"
+  - name: "4.JPG"
+  - name: "5.JPG"
+  - name: "6.JPG"
+  - name: "7.JPG"
+  - name: "8.JPG"
+  - name: "9.JPG"
