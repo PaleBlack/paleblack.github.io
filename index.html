@@ -196,7 +196,12 @@ layout: startpage
                     </header>
                     <div class="row 25%">
                         {% for image in gallery.images limit: 6 %}
-                        <div class="6u">
+                        {% capture modulo %}{{forloop.index | modulo: 2 }}{% endcapture %}
+                        {% if modulo == '0' %}
+                            <div class="6u$">
+                        {% else %}
+                            <div class="6u">
+                        {% endif %}
                             <a href="{{gallery.imagefolder}}/gallery.html" class="image fit">
                                 <img src="{{gallery.imagefolder}}/{{image.name | replace:'.JPG','_thumb.JPG'}}"
                                      alt="{{image.name}}"/>

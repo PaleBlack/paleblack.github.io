@@ -44,12 +44,26 @@
         </header>
     </section>
 
-    <div class="wrapper style2" align="center">
+    <div class="wrapper style2">
+        <section class="12u 12u(mobile) container">
+            <div class="row">
             {% for image in gallery.images %}
-                <a href="{{ gallery.imagefolder }}/{{ image.name }}" data-lightbox="{{gallery.id}}" title="{{ image.name }}"><img
-                        src="{{ gallery.imagefolder }}/{{ image.name | replace:'.JPG','_thumb.JPG' }}" title="{{ image.name }}" class="image"></a>
-                    <!--</div>-->
+                {% capture modulo %}{{forloop.index | modulo: 4 }}{% endcapture %}
+                {% if modulo == '0' %}
+                <div class="3u$ 12u$(mobile)">
+                {% else %}
+                <div class="3u 12u(mobile)">
+                {% endif %}
+
+                    <a href="{{ gallery.imagefolder }}/{{ image.name }}" data-lightbox="{{gallery.id}}"
+                       title="{{ image.name }}"><img
+                            src="{{ gallery.imagefolder }}/{{ image.name | replace:'.JPG','_thumb.JPG' }}"
+                            title="{{ image.name }}"
+                            class="image featured"></a>
+                </div>
             {% endfor %}
+            </div>
+        </section>
     </div>
         {% endif %}
     {% endfor %}
