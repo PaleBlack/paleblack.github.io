@@ -36,7 +36,8 @@ layout: startpage
         <header class="major">
 
             <p>The Death-Metal band Pale Black persuades with diversified songwriting.
-                Fast blast beats are followed by pounding groove parts. Sudden beat and rhythm changes interrupt headbanging,
+                Fast blast beats are followed by pounding groove parts. Sudden beat and rhythm changes interrupt
+                headbanging,
                 but keep the songs interesting for loyal fans.</p>
         </header>
     </section>
@@ -70,7 +71,8 @@ layout: startpage
                 </div>
                 <div class="inner">
                     <h3>{% if concert.title-en %}{{concert.title-en}}{% else %}{{concert.title}}{% endif %}</h3>
-                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/english-date.html date=concert.date %}{% endif %}</p>
+                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/english-date.html date=concert.date
+                        %}{% endif %}</p>
                     <p>{% if concert.text-en %}{{concert.text-en}}{% else %}{{concert.text}}{% endif %}</p>
                 </div>
             </article>
@@ -83,7 +85,7 @@ layout: startpage
     <div class="wrapper style1">
         <article id="biography" class="container special">
             <header>
-            <a href="#" class="image featured"><img src="images/biography.jpg" alt=""/></a>
+                <a href="#" class="image featured"><img src="images/biography.jpg" alt=""/></a>
                 <h2>Biography</h2>
                 <p>
                     It all began with two friends from the Emmental who shared a passion for metal
@@ -91,12 +93,17 @@ layout: startpage
             </header>
             <p>
                 In 2009 the two friends, Thomas and Sebastian decided to start a metal band. They practiced hard,
-                and searched for additional band members. With the most minimalistic advert ever "death metal band seeks drummer",
-                they caught Dani's attention in the summer of 2011. It was soon evident that they shared not only the same sense of humor,
+                and searched for additional band members. With the most minimalistic advert ever "death metal band seeks
+                drummer",
+                they caught Dani's attention in the summer of 2011. It was soon evident that they shared not only the
+                same sense of humor,
                 but also the same musical vision. The three threw out all the old songs, and got busy creating new ones.
-                Once they had the basics, they started looking for a bass guitarist and a singer. During this time they met many musicians,
-                but only found people to fill the gap in the winter of 2013. When they met Miriam, her solo performance of
-                Janice Joplin's " Mercedes Benz" convinced them immediately. She soon learnt how to growl, and together with Bruno,
+                Once they had the basics, they started looking for a bass guitarist and a singer. During this time they
+                met many musicians,
+                but only found people to fill the gap in the winter of 2013. When they met Miriam, her solo performance
+                of
+                Janice Joplin's " Mercedes Benz" convinced them immediately. She soon learnt how to growl, and together
+                with Bruno,
                 the band was finally complete.
                 They practiced hard in the Emmental, and half a year later, Pale Black was on stage for the first time.
                 Since then they have enjoyed doing more gigs and have also written more songs.
@@ -121,7 +128,8 @@ layout: startpage
                         <h3>Vocals: Miriam</h3>
                     </header>
                     <p>
-                        The only woman in the band can hold her own against the guys thanks to her powerful voice. She likes abstract jokes!z.
+                        The only woman in the band can hold her own against the guys thanks to her powerful voice. She
+                        likes abstract jokes!z.
                     </p>
                 </article>
                 <article class="4u 12u(mobile) special">
@@ -141,7 +149,8 @@ layout: startpage
                     </header>
                     <p>
                         As soon as he gets hold of a bass guitar, the quiet, calm Bruno changes into an animal.
-                        His tempo stability helps Dani stay in time and he thrills the audiences with his melodies on the frettless bass.
+                        His tempo stability helps Dani stay in time and he thrills the audiences with his melodies on
+                        the frettless bass.
                     </p>
                 </article>
                 <article class="4u 12u(mobile) special">
@@ -175,13 +184,17 @@ layout: startpage
                 {% for gallery in site.data.galleries %}
                 <section class="4u 12u(mobile)">
                     <header>
-                        <h2 class="icon fa-camera circled"><span class="label">Photos</span></h2>
-                        <h3>{{gallery.description}}</h3>
+                        <a href="{{gallery.imagefolder}}/gallery_en.html">
+                            <h2 class="icon fa-camera circled"><span class="label">Photos</span></h2>
+                        </a>
+                        <a href="{{gallery.imagefolder}}/gallery_en.html">
+                            <h3>{{gallery.description}}</h3>
+                        </a>
                     </header>
                     <div class="row 25%">
                         {% for image in gallery.images limit: 6 %}
                         <div class="6u">
-                            <a href="{{gallery.imagefolder}}/gallery.html" class="image fit">
+                            <a href="{{gallery.imagefolder}}/gallery_en.html" class="image fit">
                                 <img src="{{gallery.imagefolder}}/{{image.name | replace:'.JPG','_thumb.JPG'}}"
                                      alt="{{image.name}}"/>
                             </a>
@@ -206,7 +219,8 @@ layout: startpage
                             please contact us via <a href="{{site.mail-url}}">Email</a>
                             or <a href="{{site.facebook-url}}">Facebook</a>.</p>
                         <ul class="icons">
-                            <li><a href="{{site.mail-url}}" class="icon fa-envelope"><span class="label">Email</span></a>
+                            <li><a href="{{site.mail-url}}" class="icon fa-envelope"><span
+                                    class="label">Email</span></a>
                             </li>
                             <li><a href="{{site.facebook-url}}"
                                    class="icon fa-facebook"><span class="label">Facebook</span></a></li>
