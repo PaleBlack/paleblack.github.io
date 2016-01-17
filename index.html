@@ -71,8 +71,7 @@ layout: startpage
                 </div>
                 <div class="inner">
                     <h3>{{concert.title}}</h3>
-                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/german-date.html date=concert.date %}{%
-                        endif %}</p>
+                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/german-date.html date=concert.date %}{% endif %}</p>
                     <p>{{concert.text}}</p>
                 </div>
             </article>
