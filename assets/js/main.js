@@ -452,13 +452,13 @@ var settings = {
             var knownTweets = [];
 
             loadTweets.push(function (data) {
-                $(data.body).find("li.tweet").each(function (_, elem) {
+                $(data.body).find("div.timeline-Tweet").each(function (_, elem) {
                     var tweet = {
                         type: "tweet"
                     };
                     var $elem = $(elem);
                     var tweetPermalink;
-                    $elem.find("a.u-url.permalink").each(function (_, elem) {
+                    $elem.find("a.timeline-Tweet-timestamp").each(function (_, elem) {
                         tweetPermalink = elem.href;
                     });
 
@@ -472,11 +472,11 @@ var settings = {
                     $elem.find("time.dt-updated").each(function (_, elem) {
                         tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
                     });
-                    $elem.find("p.e-entry-title").each(function (_, elem) {
+                    $elem.find("div.timeline-Tweet-text").each(function (_, elem) {
                         tweet.message = elem.innerHTML;
                     });
 
-                    $elem.find("img.autosized-media").each(function (_, elem) {
+                    $elem.find("img.NaturalImage-image").each(function (_, elem) {
                         tweet.srcset = decodeURIComponent(elem.dataset.srcset);
                     });
 
