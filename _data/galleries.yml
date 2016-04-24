@@ -1,4 +1,27 @@
 - id: gallery1
+  description: Night of Devastation
+  imagefolder: /galleries/night-of-devastation
+  images:
+  - name: "utc20160423_16-48-43.JPG"
+  - name: "utc20160423_16-48-56.JPG"
+  - name: "utc20160423_16-49-32.JPG"
+  - name: "utc20160423_16-51-18.JPG"
+  - name: "utc20160423_16-51-22.JPG"
+  - name: "utc20160423_16-53-09.JPG"
+  - name: "utc20160423_16-54-24.JPG"
+  - name: "utc20160423_16-57-05.JPG"
+  - name: "utc20160423_16-57-11.JPG"
+  - name: "utc20160423_16-57-18.JPG"
+  - name: "utc20160423_16-57-26.JPG"
+  - name: "utc20160423_16-57-41.JPG"
+  - name: "utc20160423_16-59-47.JPG"
+  - name: "utc20160423_17-00-21.JPG"
+  - name: "utc20160423_17-00-34.JPG"
+  - name: "utc20160423_17-01-13.JPG"
+  - name: "utc20160423_17-01-48.JPG"
+  - name: "utc20160423_17-08-33.JPG"
+
+- id: gallery2
   description: Shit und Schein
   imagefolder: /galleries/shit-und-schein
   images:
@@ -12,7 +35,7 @@
   - name: "IMG_2750.JPG"
   - name: "IMG_2751.JPG"
 
-- id: gallery2
+- id: gallery3
   description: Hellvetia Day
   imagefolder: /galleries/hellvetia-day
   images:
@@ -23,7 +46,7 @@
   - name: "PaleBlack-Sursee-2014-11.JPG"
   - name: "PaleBlack-Sursee-2014-13.JPG"
 
-- id: gallery3
+- id: gallery4
   description: Stage Dive Derby
   imagefolder: /galleries/stage-dive-derby
   images:
