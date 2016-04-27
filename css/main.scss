@@ -1052,6 +1052,38 @@
 		}
 	}
 
+	div {
+		&.ytPlayerBox:before {
+			padding-top: 56.25%;
+			display: block;
+			content: '';
+		}
+		&.ytPlayerBox {
+			position: relative;
+			width: 100%;
+			margin-bottom: 1em;
+
+			iframe {
+				width: 100%;
+				height: 100%;
+				position:  absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+		}
+		&.scPlayerBox {
+			position: relative;
+			margin-bottom: 1em;
+
+			iframe {
+				width: 100%;
+			}
+		}
+	}
+
+
 /* Wide */
 
 	@include breakpoint(wide) {
