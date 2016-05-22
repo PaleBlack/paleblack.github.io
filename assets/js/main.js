@@ -481,7 +481,7 @@ var settings = {
                             tweet.srcset = decodeURIComponent(elem.dataset.srcset);
                         }
                         else {
-                            tweet.src = decodeURIComponent(elem.dataset.src)
+                            tweet.src = decodeURIComponent(elem.src)
                         }
                     });
 
