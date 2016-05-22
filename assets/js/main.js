@@ -477,7 +477,12 @@ var settings = {
                     });
 
                     $elem.find("img.NaturalImage-image").each(function (_, elem) {
-                        tweet.srcset = decodeURIComponent(elem.dataset.srcset);
+                        if (elem.dataset.srcset) {
+                            tweet.srcset = decodeURIComponent(elem.dataset.srcset);
+                        }
+                        else {
+                            tweet.src = decodeURIComponent(elem.dataset.src)
+                        }
                     });
 
                     result.push(tweet);
@@ -536,7 +541,11 @@ var settings = {
                 var activityHtml = '<div class="image featured"><a href="' + activity.url + '">';
                 if (activity.srcset) {
                     activityHtml += '<img srcset="' + activity.srcset + '" width="100%" />';
-                } else {
+                }
+                else if (activity.src) {
+                    activityHtml += '<img src="' + activity.src + '" width="100%" />';
+                }
+                else {
                     activityHtml += '<img src="/images/avatar.png" width="100%" />';
                 }
                 activityHtml += '</a></div>';
