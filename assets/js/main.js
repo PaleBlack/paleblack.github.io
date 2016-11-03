@@ -417,7 +417,8 @@ var settings = {
         modal.css("pointer-events", "auto")
 
         jQuery("#close_modal").on("click",
-            function(){
+            function(event){
+                event.preventDefault()
                 var modal = jQuery(".modal");
                 modal.css("opacity", "0");
                 modal.css("pointer-events", "none")
