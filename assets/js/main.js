@@ -411,6 +411,19 @@ var settings = {
             return
         }
 
+        //open modal window for wemakeit
+        var modal = jQuery("#modal_window");
+        modal.css("opacity", "1");
+        modal.css("pointer-events", "auto")
+
+        jQuery("#close_modal").on("click",
+            function(){
+                var modal = jQuery(".modal");
+                modal.css("opacity", "0");
+                modal.css("pointer-events", "none")
+                }
+            );
+
         // Global for JSONP tweet callback
         window.loadTweets = window.loadTweets || [];
 

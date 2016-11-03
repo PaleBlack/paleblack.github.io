@@ -6,6 +6,20 @@ layout: startpage
     <!-- Header -->
     <div id="header">
 
+        <div id="modal_window" class="modal">
+            <div class="modalPlayerBox">
+                <div class="modalPlayerBoxContent">
+                    <a id="close_modal" href="#" title="Close" class="close">X</a>
+                    <h2>Pale Black geht ins Studio</h2>
+                    <iframe src="https://player.vimeo.com/video/189050591" width="640" height="360" frameborder="0"
+                            webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                        <p>Wir nehmen unser erstes Album auf. Damit die Finanzierung gesichert ist,
+                            tauschen wir alles, was wir entbehren können, gegen deine Hilfe ein!</p>
+                        <a href="https://wemakeit.com/projects/pale-black-erstlingswerk">Ich will Pale Black unterstützen!</a>
+                </div>
+            </div>
+        </div>
+
         <!-- Inner -->
         <div class="inner">
             <header>
@@ -54,10 +68,12 @@ layout: startpage
                 <h2>Musik</h2>
             </header>
             <div class="ytPlayerBox">
-                <iframe src="https://www.youtube.com/embed/Hd4WZMQkNzo?rel=0" scrolling="no" frameborder="no" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/Hd4WZMQkNzo?rel=0" scrolling="no" frameborder="no"
+                        allowfullscreen></iframe>
             </div>
             <div class="ytPlayerBox">
-                <iframe src="https://www.youtube.com/embed/hbYS3NmdI6Q?rel=0" scrolling="no" frameborder="no" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/hbYS3NmdI6Q?rel=0" scrolling="no" frameborder="no"
+                        allowfullscreen></iframe>
             </div>
             <div class="scPlayerBox">
                 <iframe scrolling="no" frameborder="no"
@@ -79,7 +95,8 @@ layout: startpage
                 </div>
                 <div class="inner">
                     <h3>{{concert.title}}</h3>
-                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/german-date.html date=concert.date %}{% endif %}</p>
+                    <p>{% if concert.nodate %}{{}}{% else %}{% include functions/german-date.html date=concert.date %}{%
+                        endif %}</p>
                     <p>{{concert.text}}</p>
                 </div>
             </article>
@@ -180,7 +197,7 @@ layout: startpage
                     </header>
                     <p>
                         Der Band Opa, wie er von den anderen liebevoll genannt wird,
-                        sorgt mit seinen Visionen von komischen Taktfolgen und Polyrithmen immer wieder für
+                        sorgt mit seinen Visionen von komischen Taktfolgen und Polyrhythmen immer wieder für
                         Kopfzerbrechen.
                     </p>
                 </article>
@@ -206,17 +223,17 @@ layout: startpage
                         {% for image in gallery.images limit: 6 %}
                         {% capture modulo %}{{forloop.index | modulo: 2 }}{% endcapture %}
                         {% if modulo == '0' %}
-                            <div class="6u$">
-                        {% else %}
+                        <div class="6u$">
+                            {% else %}
                             <div class="6u">
-                        {% endif %}
-                            <a href="{{gallery.imagefolder}}/gallery.html" class="image fit">
-                                <img src="{{gallery.imagefolder}}/{{image.name | replace:'.JPG','_thumb.JPG'}}"
-                                     alt="{{image.name}}"/>
-                            </a>
+                                {% endif %}
+                                <a href="{{gallery.imagefolder}}/gallery.html" class="image fit">
+                                    <img src="{{gallery.imagefolder}}/{{image.name | replace:'.JPG','_thumb.JPG'}}"
+                                         alt="{{image.name}}"/>
+                                </a>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
                 </section>
                 {% endfor %}
             </div>
