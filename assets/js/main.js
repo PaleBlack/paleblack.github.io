@@ -417,13 +417,13 @@ var settings = {
         modal.css("pointer-events", "auto")
 
         jQuery("#close_modal").on("click",
-            function(event){
+            function (event) {
                 event.preventDefault()
                 var modal = jQuery(".modal");
                 modal.css("opacity", "0");
                 modal.css("pointer-events", "none")
-                }
-            );
+            }
+        );
 
         // Global for JSONP tweet callback
         window.loadTweets = window.loadTweets || [];
@@ -444,106 +444,11 @@ var settings = {
                 .replace(/>/g, '&gt;');
         }
 
-        // Provider for activities in the stream
-        var Provider = function (config) {
-            this.config = config;
-            this.handle = config.handle;
-        };
-
-        // Default AJAX load
-        Provider.prototype.load = function (callback) {
-            var self = this;
-            $.get(self.config.source, function (data) {
-                callback(self.handle(data));
-            });
-        };
-
         // Tweets. Since there is no authentication-free tweet search API and we've got
         // no server-side component, we'll use a twitter widget as the data source.
         // this means we have to parse the widget HTML to retrieve data.
-        var TweetsForWidget = function (widgetId) {
-            var result = [];
-            var knownTweets = [];
 
-            loadTweets.push(function (data) {
-                $(data.body).find("div.timeline-Tweet").each(function (_, elem) {
-                    var tweet = {
-                        type: "tweet"
-                    };
-                    var $elem = $(elem);
-                    var tweetPermalink;
-                    $elem.find("a.timeline-Tweet-timestamp").each(function (_, elem) {
-                        tweetPermalink = elem.href;
-                    });
-
-                    if (knownTweets[tweetPermalink]) {
-                        return;
-                    }
-
-                    knownTweets[tweetPermalink] = true;
-                    tweet.url = tweetPermalink;
-
-                    $elem.find("time.dt-updated").each(function (_, elem) {
-                        tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
-                    });
-                    $elem.find("p.timeline-Tweet-text").each(function (_, elem) {
-                        tweet.message = elem.innerHTML;
-                    });
-
-                    $elem.find("img.NaturalImage-image").each(function (_, elem) {
-                        if (elem.dataset.srcset) {
-                            tweet.srcset = decodeURIComponent(elem.dataset.srcset);
-                        }
-                        else {
-                            tweet.src = decodeURIComponent(elem.src)
-                        }
-                    });
-
-                    result.push(tweet);
-                });
-
-                return result;
-            });
-
-            var provider = new Provider({
-                source: "https://cdn.syndication.twimg.com/widgets/timelines/" + widgetId + "?lang=en&callback=loadTweets[" + (loadTweets.length - 1) + "]&suppress_response_codes=true"
-            });
-
-            provider.load = function (callback) {
-                $.ajax({
-                    url: provider.config.source,
-                    dataType: "script",
-                    success: function () {
-                        callback(result);
-                    },
-                    error: function (script) {
-                        throw new Error("Could not load script " + script);
-                    }
-                });
-            };
-            return provider;
-        };
-
-        // Register the providers that shall provide activities
-        var providers = [
-            TweetsForWidget("670990882267643905")
-        ];
-
-        // Invokes a callback once a certain number of operations have finished
-        var Barrier = function (i, callback) {
-            return {
-                expected: i,
-                count: 0,
-                done: function (data) {
-                    if (++this.count == this.expected) {
-                        callback(data)
-                    }
-                }
-            };
-        };
-
-        // New barrier instance. Callback sorts and renders the activities.
-        var b = Barrier(providers.length, function (activities) {
+        function addTweets(activities) {
             var $ul = $('<div class="reel">');
             var $li = $('<article>');
 
@@ -586,19 +491,71 @@ var settings = {
                 activitiesContainer.append($ul);
                 activitiesContainer.each(initializeCarousel);
             });
-        });
+        };
 
         // Global list of all collected activities
         var activities = [];
+        var observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (!mutation.addedNodes) return;
 
-        // Invoke all providers, using the barrier created above
-        $.each(providers, function (_, provider) {
-            provider.load(function (a) {
-                activities = activities.concat(a);
-                b.done(activities);
-            });
+                for (var i = 0; i < mutation.addedNodes.length; i++) {
+                    if (mutation.addedNodes[i].id == "rufous-sandbox") {
+                        var timelineTweets = $("#twitter-widget-0").contents().find("div.timeline-Tweet");
+
+                        var knownTweets = [];
+                        var tweets = [];
+                        timelineTweets.each(function (_, elem) {
+
+                                var tweet = {
+                                    type: "tweet"
+                                };
+                                var $elem = $(elem);
+                                var tweetPermalink;
+                                $elem.find("a.timeline-Tweet-timestamp").each(function (elem) {
+                                    tweetPermalink = elem.href;
+                                });
+
+                                if (tweetPermalink && knownTweets[tweetPermalink]) {
+                                    return;
+                                }
+
+                                knownTweets[tweetPermalink] = true;
+                                tweet.url = tweetPermalink;
+
+                                $elem.find("time.dt-updated").each(function (_, elem) {
+                                    tweet.time = parseTime(PATTERN_TWITTER_TIMESTAMP, elem.getAttribute("datetime"));
+                                });
+                                $elem.find("p.timeline-Tweet-text").each(function (_, elem) {
+                                    tweet.message = elem.innerHTML;
+                                });
+
+                                $elem.find("img.NaturalImage-image").each(function (_, elem) {
+                                    if (elem.dataset.srcset) {
+                                        tweet.srcset = decodeURIComponent(elem.dataset.srcset);
+                                    }
+                                    else {
+                                        tweet.src = decodeURIComponent(elem.src)
+                                    }
+                                });
+
+                                tweets.push(tweet);
+                            }
+                        );
+                        // tweets.each(function(i, e)  {console.log(e)});
+                        addTweets(tweets);
+                        observer.disconnect();
+                    }
+                }
+            })
+        });
+
+        observer.observe(document.body, {
+            childList: true
+            , subtree: true
+            , attributes: false
+            , characterData: false
         });
 
     });
-
 })(jQuery);
